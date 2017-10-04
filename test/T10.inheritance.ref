@@ -3,8 +3,6 @@
 #include <T10.inheritance.hpp> // A::A
 #include <T10.inheritance.hpp> // A::operator=
 #include <T10.inheritance.hpp> // B
-#include <T10.inheritance.hpp> // B::B
-#include <T10.inheritance.hpp> // B::operator=
 #include <T10.inheritance.hpp> // Base
 #include <T10.inheritance.hpp> // Base::f_v
 #include <T10.inheritance.hpp> // Base::f_v_2
@@ -242,9 +240,6 @@ void bind_T10_inheritance(std::function< pybind11::module &(std::string const &n
 		pybind11::handle cl_type = cl;
 
 		cl.def(pybind11::init<>());
-		cl.def(pybind11::init<const class B &>(), pybind11::arg(""));
-
-		cl.def("assign", (class B & (B::*)(const class B &)) &B::operator=, "C++: B::operator=(const class B &) --> class B &", pybind11::return_value_policy::automatic, pybind11::arg(""));
 	}
 	{ // X file:T10.inheritance.hpp line:57
 		pybind11::class_<X, std::shared_ptr<X>, PyCallBack_X, Base> cl(M(""), "X", "");
