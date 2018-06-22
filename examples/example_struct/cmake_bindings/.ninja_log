@@ -1,0 +1,4 @@
+# ninja log v5
+0	1702	1529255038	CMakeFiles/test_struct.dir/test_struct.o	f08a02c99c336f5d
+0	2268	1529255039	CMakeFiles/test_struct.dir/test_struct/test_struct.o	867dcc559f37ef58
+2268	2381	1529255039	test_struct.so	d60ec037dc7d3ac8
