@@ -1,6 +1,10 @@
+#include <initializer_list>
 #include <iostream>
+#include <iterator>
+#include <memory>
 #include <sstream> // __str__
 #include <test_struct/test_struct.hpp>
+#include <vector>
 
 #include <pybind11/pybind11.h>
 #include <functional>
@@ -16,7 +20,7 @@
 
 void bind_test_struct_test_struct(std::function< pybind11::module &(std::string const &namespace_) > &M)
 {
-	std::cout << "B0_[testers::test_my_struct] ";
+	std::cout << "B1_[testers::test_my_struct] ";
 	{ // testers::test_my_struct file:test_struct/test_struct.hpp line:10
 		pybind11::class_<testers::test_my_struct, std::shared_ptr<testers::test_my_struct>> cl(M("testers"), "test_my_struct", "");
 		pybind11::handle cl_type = cl;
@@ -29,5 +33,6 @@ void bind_test_struct_test_struct(std::function< pybind11::module &(std::string 
 		cl.def("increment_int", (void (testers::test_my_struct::*)()) &testers::test_my_struct::increment_int, "C++: testers::test_my_struct::increment_int() --> void");
 		cl.def("add_float", (void (testers::test_my_struct::*)()) &testers::test_my_struct::add_float, "C++: testers::test_my_struct::add_float() --> void");
 		cl.def("append_vec", (void (testers::test_my_struct::*)()) &testers::test_my_struct::append_vec, "C++: testers::test_my_struct::append_vec() --> void");
+		cl.def("foo", (class std::vector<int, class std::allocator<int> > (testers::test_my_struct::*)()) &testers::test_my_struct::foo, "C++: testers::test_my_struct::foo() --> class std::vector<int, class std::allocator<int> >");
 	}
 }

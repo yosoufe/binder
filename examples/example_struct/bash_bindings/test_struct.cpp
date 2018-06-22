@@ -7,6 +7,7 @@
 
 typedef std::function< pybind11::module & (std::string const &) > ModuleGetter;
 
+void bind_std_stl_vector(std::function< pybind11::module &(std::string const &namespace_) > &M);
 void bind_test_struct_test_struct(std::function< pybind11::module &(std::string const &namespace_) > &M);
 
 
@@ -23,12 +24,14 @@ PYBIND11_MODULE(test_struct, root_module) {
 	modules[""] = root_module;
 
 	std::vector< std::pair<std::string, std::string> > sub_modules {
+		{"", "std"},
 		{"", "testers"},
 	};
 	for(auto &p : sub_modules ) modules[p.first.size() ? p.first+"::"+p.second : p.second] = modules[p.first].def_submodule(p.second.c_str(), ("Bindings for " + p.first + "::" + p.second + " namespace").c_str() );
 
 	//pybind11::class_<std::shared_ptr<void>>(M(""), "_encapsulated_data_");
 
+	bind_std_stl_vector(M);
 	bind_test_struct_test_struct(M);
 
 }

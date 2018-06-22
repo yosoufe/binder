@@ -35,6 +35,11 @@ struct test_my_struct {
 		a_vector.push_back(a_vector.back()+1);
 	}
 
+	std::vector<int>
+	foo() {
+		return std::vector<int>{1,2,3};
+	}
+
 };
 }
 

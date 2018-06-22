@@ -40,8 +40,17 @@ g++ \
 
 cd ../
 
+cd std/
+g++ \
+  -O3 \
+  -I"${pybase::-12}"/include/python3.6m -I$PWD/../../../../build/pybind11/include -I$PWD/..//../include \
+  -I$PWD/../../../../source -shared  \
+  -std=c++11  -c stl_vector.cpp  \
+  -o stl_vector.o -fPIC && \
+
+cd ../
 # Link together compiled bindings
-g++ -o test_struct.so -shared test_struct/test_struct.o test_struct.o
+g++ -o test_struct.so -shared test_struct/test_struct.o test_struct.o std/stl_vector.o
 
 # Try running via python
 python3 -c "import sys; sys.path.append('.'); import test_struct; f = test_struct.testers.test_my_struct(); print(f.an_int); print(f.a_vector[1])"
