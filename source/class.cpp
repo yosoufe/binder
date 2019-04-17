@@ -21,6 +21,7 @@
 
 #include <clang/AST/DeclTemplate.h>
 //#include <clang/AST/TemplateBase.h>
+#include <clang/Lex/Lexer.h>
 
 
 using namespace llvm;
@@ -978,13 +979,48 @@ string bind_copy_constructor(ConstructorBindingInfo const &CBI) //CXXConstructor
 string bind_constructor(ConstructorBindingInfo const &CBI)
 {
 	string code;
-
+	string name = CBI.C->getQualifiedNameAsString();
+	/*
 	uint args_to_bind = 0;
 	for(; args_to_bind < CBI.T->getNumParams(); ++args_to_bind) {
-		if( CBI.T->getParamDecl(args_to_bind)->hasDefaultArg() ) break;
+		if( CBI.T->getParamDecl(args_to_bind)->hasDefaultArg() ) 
+			break;
 	}
 
 	for(; args_to_bind <= CBI.T->getNumParams(); ++args_to_bind) code += bind_constructor(CBI, args_to_bind, args_to_bind == CBI.T->getNumParams()) + '\n';
+	*/
+	string c;
+	c = "\tcl.def( pybind11::init<{}>()"_format( function_arguments(CBI.T) );
+
+	for(uint i=0; i<CBI.T->getNumParams() ; ++i) {
+		if (CBI.T->getParamDecl(i)->hasDefaultArg()){
+			const Expr* dv = CBI.T->getParamDecl(i)->getDefaultArg();
+			//const string text = clang::Lexer::getSourceText(dv->getAsCharSourceRange(), CBI.C->getASTContext().getSourceManager(), CBI.C->getASTContext().getLangOpts());
+			auto loc = dv->getSourceRange();//.printToString(CBI.C->getASTContext().getSourceManager());
+			//auto loc = CBI.T->getParamDecl(i)->getSourceRange();
+			//auto loc = CBI.T->getDefinition()->getSourceRange();
+			//auto& sm = CBI.C->getASTContext().getSourceManager();
+			auto& sm = CBI.T->getASTContext().getSourceManager();
+			//string defVal = string(loc.getBegin(),loc.getEnd());
+
+			string defVal = string(sm.getCharacterData(loc.getBegin()), sm.getCharacterData(loc.getEnd()) - sm.getCharacterData(loc.getBegin()));
+			const char* ch = sm.getCharacterData(loc.getEnd());
+			while(*ch != ',' and *ch != ')')
+			{
+				if (*ch != ' ') defVal += string(ch, 1);
+				ch++;
+			}
+
+			c += ", pybind11::arg(\"{}\")={}"_format( string( CBI.T->getParamDecl(i)->getName() ), defVal );
+		} else {
+			c += ", pybind11::arg(\"{}\")"_format( string( CBI.T->getParamDecl(i)->getName() ));
+		}
+
+
+		request_bindings( CBI.T->getParamDecl(i)->getOriginalType(), CBI.context);
+	}
+	c += " );\n";
+	code = c;
 
 	return code;
 }
