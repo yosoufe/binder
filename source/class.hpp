@@ -16,10 +16,12 @@
 #include <context.hpp>
 
 #include <clang/AST/DeclCXX.h>
+#include <clang/Basic/SourceLocation.h>
 
 #include <string>
 #include <vector>
 #include <set>
+
 
 namespace binder {
 
