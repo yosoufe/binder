@@ -23,13 +23,15 @@
 #include <clang/AST/Comment.h>
 #include <clang/Basic/Diagnostic.h>
 
-#include <llvm/Support/CommandLine.h> // Declares llvm::cl::extrahelp
+// Declares llvm::cl::extrahelp.
+#include "llvm/Support/CommandLine.h"
 
 #include <context.hpp>
 #include <enum.hpp>
 #include <function.hpp>
 #include <class.hpp>
 #include <util.hpp>
+
 
 using namespace clang::tooling;
 using namespace llvm;
@@ -244,6 +246,7 @@ int main(int argc, const char **argv)
 	CommonOptionsParser op(argc, argv, BinderToolCategory);
 
 	ClangTool tool(op.getCompilations(), op.getSourcePathList());
+
 	//outs() << "Root module: " << O_root_module << "\n";
 	//for(auto &s : O_bind) outs() << "Binding: '" << s << "'\n";
 

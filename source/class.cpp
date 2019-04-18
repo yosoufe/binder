@@ -523,6 +523,7 @@ inline string callback_structure_name(CXXRecordDecl const *C)
 bool is_callback_structure_needed(CXXRecordDecl const *C)
 {
 	//C->dump();
+	if(Config::get().is_callback_struct_skipping_requested(C->getQualifiedNameAsString())) return false;
 	if( C->hasAttr<FinalAttr>() ) return false;
 
 	for(auto m = C->method_begin(); m != C->method_end(); ++m) {
@@ -546,8 +547,14 @@ bool is_callback_structure_needed(CXXRecordDecl const *C)
 bool is_callback_structure_constructible(CXXRecordDecl const *C)
 {
 	if( C->isAbstract() ) {
-		for(auto m = C->method_begin(); m != C->method_end(); ++m) {
-			if( m->isPure()  and  !isa<CXXConstructorDecl>(*m)  and  ( m->getAccess() == AS_private  or  !is_bindable(*m)  or  is_skipping_requested(*m, Config::get()) ) ) return false;
+		for(auto m = C->method_begin(); m != C->method_end(); ++m) {			
+			if( m->isPure()  and  
+				!isa<CXXConstructorDecl>(*m)  and  
+				( 	m->getAccess() == AS_private  or
+					!is_bindable(*m)  or  
+					is_skipping_requested(*m, Config::get()) 
+				) 
+			) return false;
 		}
 
 		for(auto b = C->bases_begin(); b!=C->bases_end(); ++b) {
@@ -606,6 +613,7 @@ string bind_member_functions_for_call_back(CXXRecordDecl const *C, string const 
 	string c;
 
 	for(auto m = C->method_begin(); m != C->method_end(); ++m) {
+		auto mName = m->getNameAsString();
 		if( (m->getAccess() != AS_private)  and  is_bindable(*m)  and  is_overloadable(*m)
 			and  !is_skipping_requested(*m, Config::get())
 			and  !isa<CXXConstructorDecl>(*m)  and   !isa<CXXDestructorDecl>(*m)  and  m->isVirtual()

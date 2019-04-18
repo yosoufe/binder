@@ -55,6 +55,8 @@ void Config::read(string const &file_name)
 	string const _function_      {"function"};
 	string const _class_         {"class"};
 	string const _include_       {"include"};
+	string const _general_callback_structs_       {"general_callback_structs"};
+	string const _callback_struct_       {"callback_struct"};
 	string const _include_for_class_       {"include_for_class"};
 	string const _binder_        {"binder"};
 	string const _add_on_binder_ {"add_on_binder"};
@@ -103,6 +105,16 @@ void Config::read(string const &file_name)
 
 						if(bind) includes_to_add.push_back(name_without_spaces);
 						else includes_to_skip.push_back(name_without_spaces);
+
+					} else if( token == _callback_struct_ ) {
+
+						if(bind){ callback_struct_to_add.push_back(name_without_spaces);}
+						else callback_struct_to_skip.push_back(name_without_spaces);
+
+					} else if( token == _general_callback_structs_ ) {
+
+						if(bind) are_callback_structs_forbidden = false;
+						else are_callback_structs_forbidden = true;
 
 					} else if( token == _include_for_class_ ) {
 
@@ -264,6 +276,22 @@ bool Config::is_include_skipping_requested(string const &include) const
 {
 	for(auto & i : includes_to_skip)
 		if( begins_with(include, i) ) return true;
+
+	return false;
+}
+
+bool Config::is_callback_struct_skipping_requested(string const &callback_struct) const
+{
+	// If the callback should be added regardless of general config
+	for(auto & i : callback_struct_to_add)
+		if( begins_with(callback_struct, i) ) return false;
+	
+	// if general config says it should be removed
+	if (are_callback_structs_forbidden) return true;
+
+	// if the callback is in skip list
+	for(auto & i : callback_struct_to_skip)
+		if( begins_with(callback_struct, i) ) return true;
 
 	return false;
 }

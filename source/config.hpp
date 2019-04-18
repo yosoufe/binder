@@ -32,7 +32,11 @@ class Config
 	Config() {}
 
 	Config(string const &root_module_, std::vector<string> namespaces_to_bind_, std::vector<string> namespaces_to_skip_, string const &prefix_, std::size_t maximum_file_length_) :
-		root_module(root_module_), namespaces_to_bind(namespaces_to_bind_), namespaces_to_skip(namespaces_to_skip_), prefix(prefix_), maximum_file_length(maximum_file_length_) {}
+		are_callback_structs_forbidden(false),
+		root_module(root_module_), namespaces_to_bind(namespaces_to_bind_),
+		namespaces_to_skip(namespaces_to_skip_), 
+		prefix(prefix_), 
+		maximum_file_length(maximum_file_length_) {}
 
 private:
 	std::map<string, string> binders_, add_on_binders_;
@@ -46,6 +50,7 @@ private:
 	string default_member_lvalue_reference_return_value_policy_ = "pybind11::return_value_policy::automatic";
 	string default_member_rvalue_reference_return_value_policy_ = "pybind11::return_value_policy::automatic";
 	string default_call_guard_ = "";
+	bool are_callback_structs_forbidden;
 
 public:
 	static Config &get();
@@ -57,7 +62,8 @@ public:
 
 	std::vector<string> namespaces_to_bind, classes_to_bind, functions_to_bind,
 						namespaces_to_skip, classes_to_skip, functions_to_skip,
-						includes_to_add, includes_to_skip;
+						includes_to_add, includes_to_skip, 
+						callback_struct_to_skip, callback_struct_to_add;
 
 	std::map<string, string> const &binders() const { return binders_; }
 	std::map<string, string> const &add_on_binders() const { return add_on_binders_; }
@@ -87,6 +93,8 @@ public:
 	bool is_class_skipping_requested(string const &class_) const;
 
 	bool is_include_skipping_requested(string const &include) const;
+
+	bool is_callback_struct_skipping_requested(string const &include) const;
 
 	string includes_code() const;
 };
