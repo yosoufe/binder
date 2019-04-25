@@ -759,6 +759,14 @@ string binding_public_member_functions(CXXRecordDecl const *C, bool callback_str
 	}
 
 	for(auto m = C->method_begin(); m != C->method_end(); ++m) {
+		std::string name = m->getNameAsString ();
+		size_t found = name.find(std::string("deleteActor2"));
+		std::string dec;
+		if ( found != std::string::npos )
+		{
+			std::cout << std::endl;
+			dec = m->getDeclName().getAsString ();
+		}
 		if( m->getAccess() == AS_public
 			and  is_bindable(*m)  //and  !is_skipping_requested(FunctionDecl const *F, Config const &config)
 			and  !is_skipping_requested(*m, Config::get())

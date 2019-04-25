@@ -62,6 +62,7 @@ def compile_sources(sources_to_compile):
     os.chdir(bindings_dir)
     lines_to_write = []
     lines_to_write.append(f'project({python_module_name})')
+    lines_to_write.append('set (CMAKE_CXX_STANDARD 11)')
 
     compiled_sources = []
     include_directories = []
@@ -69,6 +70,8 @@ def compile_sources(sources_to_compile):
         lines_to_write.append(f'include_directories({include_dir})')
     lines_to_write.append('set_property(GLOBAL PROPERTY POSITION_INDEPENDENT_CODE ON)') # -fPIC
     lines_to_write.append('add_definitions(-DNDEBUG)')
+
+
 
     lines_to_write.append(f'add_library({python_module_name} SHARED')
     for source in sources_to_compile:

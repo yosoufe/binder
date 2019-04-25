@@ -349,7 +349,7 @@ bool is_bindable(QualType const &qt)
 
 	if( Type const *tp = qt/*.getCanonicalType()*/.getTypePtrOrNull() ) {
 		if( CXXRecordDecl *rd = tp->getAsCXXRecordDecl() ) {
-			//outs() << "is_bindable qt CXXRecordDecl:" << rd->getQualifiedNameAsString() << " " << is_bindable(rd) << "\n";
+			outs() << "is_bindable qt CXXRecordDecl:" << rd->getQualifiedNameAsString() << " " << is_bindable(rd) << "\n";
 			r &= is_bindable(rd);
 		}
 		if( TagDecl *td = tp->getAsTagDecl() ) {

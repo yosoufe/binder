@@ -125,7 +125,7 @@ def main():
     os.makedirs(build_dir)
     #if not os.path.isdir(build_dir): os.makedirs(build_dir)
 
-    for t in tests: run_test(t, build_dir)
+    for t in reversed(tests): run_test(t, build_dir)
 
     print('Done!')
 

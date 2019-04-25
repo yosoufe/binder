@@ -7,6 +7,19 @@
 #include <vector>
 
 namespace testers {
+
+struct Base {
+	virtual void f()=0;
+};
+
+struct Astruct : public Base {
+	int a;
+	Astruct(int _a):a(_a){};
+	void f() override {};
+};
+
+
+
 struct test_my_struct {
 	int an_int;
 	std::string a_string;
@@ -33,6 +46,11 @@ struct test_my_struct {
 	void
 	append_vec() {
 		a_vector.push_back(a_vector.back()+1);
+	}
+
+	void someFunction(std::vector<Astruct*> As)
+	{
+		an_int = (*As[1]).a;
 	}
 
 };

@@ -386,7 +386,9 @@ string bind_function(string const & module, FunctionDecl const *F, Context &cont
 		if( F->getParamDecl(args_to_bind)->hasDefaultArg() ) break;
 	}
 
-	for(; args_to_bind <= num_params; ++args_to_bind) code += module + bind_function(F, args_to_bind, args_to_bind == num_params, context, parent, always_use_lambda or F->isVariadic()) + '\n';
+	for(; args_to_bind <= num_params; ++args_to_bind) 
+		code += module + 
+				bind_function(F, args_to_bind, args_to_bind == num_params, context, parent, always_use_lambda or F->isVariadic()) + '\n';
 
 	return code;
 }
@@ -442,7 +444,8 @@ bool is_bindable(FunctionDecl const *F)
 
 	r &= is_bindable(rt);
 
-	for(auto p = F->param_begin(); p != F->param_end(); ++p) r &= is_bindable( (*p)->getOriginalType().getCanonicalType() );
+	for(auto p = F->param_begin(); p != F->param_end(); ++p) 
+		r &= is_bindable( (*p)->getOriginalType().getCanonicalType() );
 	//outs() << "is_bindable: " << F->getQualifiedNameAsString() << " " << r << "\n";
 
 	if( r && is_banned_symbol(F) ) return false;
